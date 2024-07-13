@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grades</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/subjects">Create Class</a>
+      <% if (user) { %>
+        <span>Bejelentkezve, <%= user.nev %>!</span>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+      <a href="/register">Register</a>
+      <a href="/felhasznalok">Users</a>
+      <a href="/jegyek">Grades</a>
+    </nav>
+  </header>
+
+  <h1>Jegyek és statisztika</h1>
+
+  <h2>Felhasználók</h2>
+  <ul>
+    <% felhasznalok.forEach(function(felhasznalo) { %>
+      <li><%= felhasznalo.nev %></li>
+    <% }); %>
+  </ul>
+
+  <h1>Jegyek összesítve tantárgyanként</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Tantárgy</th>
+        <th>Felhasználó</th>
+        <th>Jegyek</th>
+        <th>Átlag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% jegyek.forEach(function(jegy) { %>
+        <tr>
+          <td><%= jegy.tantargy_nev %></td>
+          <td><%= jegy.diak_nev %></td>
+          <td>
+            <% let jegyekArray = jegy.jegyek.split(', '); %>
+            <% jegyekArray.forEach(function(j) { %>
+              <span class="<%= j < 5 ? 'low-grade' : '' %>"><%= j %></span>
+            <% }); %>
+          </td>
+          <td><%= jegy.atlag.toFixed(2) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <h1>Diákok Jegyei Tantárgyanként</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Diák neve</th>
+        <th>Tantárgy neve</th>
+        <th>Jegyek</th>
+        <th>Átlag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% jegyek.forEach(function(jegy) { %>
+        <tr>
+          <td><%= jegy.diak_nev %></td>
+          <td><%= jegy.tantargy_nev %></td>
+          <td><%= jegy.jegyek %></td>
+          <td><%= jegy.atlag.toFixed(2) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <% if (user && user.rang === 2) { %>
+    <h2>Új jegy hozzáadása</h2>
+    <form action="/jegyBeir" method="post">
+      <label for="diak">Diák:</label>
+      <select id="diak" name="diakId" required>
+        <% felhasznalok.forEach(function(felhasznalo) { %>
+          <% if (felhasznalo.rang === 3) { %>
+            <option value="<%= felhasznalo.id %>"><%= felhasznalo.nev %></option>
+          <% } %>
+        <% }); %>
+      </select>
+      <br>
+      <label for="tantargy">Tantárgy:</label>
+      <select id="tantargy" name="tantargyId" required>
+        <% tantargyak.forEach(function(tantargy) { %>
+          <option value="<%= tantargy.id %>"><%= tantargy.nev %></option>
+        <% }); %>
+      </select>
+      <br>
+      <label for="jegy">Jegy:</label>
+      <input type="number" id="jegy" name="jegy" min="1" max="10" required>
+      <br>
+      <button type="submit">Hozzáadás</button>
+    </form>
+  <% } %>
+
+</body>
+</html>

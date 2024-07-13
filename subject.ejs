@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <title>Classroom</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/subjects">Create Class</a>
+            <% if (user) { %>
+              <span>Bejelentkezve, <%= user.nev %>!</span>
+              <a href="/logout">Logout</a>
+            <% } else { %>
+              <a href="/login">Login</a>
+            <% } %>
+            <a href="/register">Register</a>
+            <a href="/felhasznalok">Users</a>
+            <a href="/jegyek">Grades</a>
+          </nav>
+    </header>
+    <h1>Class creator</h1>
+    <form action="/addSubject" method="post">
+        <label for="subjectName">Tantárgy neve:</label>
+        <input type="text" id="subjectName" name="tantargyNev" required>
+
+        <label for="description">Leírás:</label>
+        <input type="text" id="description" name="leiras" required>
+
+        <% if (user && (user.rang === 1 || user.rang === 2)) { %>
+            <% if (user.rang === 1) { %>
+                <label for="userId">Tanár:</label>
+                <select id="userId" name="felhasznaloId" required>
+                    <% felhasznalok.forEach(function(felhasznalo) { %>
+                        <option value="<%= felhasznalo.id %>"><%= felhasznalo.nev %></option>
+                    <% }); %>
+                </select>
+            <% } else { %>
+                <input type="hidden" id="userId" name="felhasznaloId" value="<%= user.id %>">
+                <label for="userName">Tanár:</label>
+                <input type="text" id="userName" name="userName" value="<%= user.nev %>" disabled>
+            <% } %>
+        <% } else { %>
+            <p>Csak tanár vagy admin/igazgató érheti el ezt az oldalt.</p>
+        <% } %>
+        
+
+        <input type="submit" value="Hozzáadás">
+    </form>
+    <script src="index.js"></script>
+</body>
+</html>

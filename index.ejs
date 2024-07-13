@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <title>Classroom</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/subjects">Create Class</a>
+        <% if (user) { %>
+          <span>Bejelentkezve, <%= user.nev %>!</span>
+          <a href="/logout">Logout</a>
+        <% } else { %>
+          <a href="/login">Login</a>
+        <% } %>
+        <a href="/register">Register</a>
+        <a href="/felhasznalok">Users</a>
+        <a href="/jegyek">Grades</a>
+      </nav>
+</header>
+<div>
+    <h1>Tantárgyak és feladatok</h1>
+</div>
+<div id="subjects">
+    <% tantargyak.forEach(function(tantargy) { %>
+        <% if (user && user.rang) { %>
+            <div class="subject-detailed" data-id="<%= tantargy.id %>" data-description="<%= tantargy.leiras %>" data-user="<%= user.rang %>" >
+                <h2><%= tantargy.nev %></h2>
+            </div>
+        <% } else { %>
+            <div class="subject-detailed" data-id="<%= tantargy.id %>" data-description="<%= tantargy.leiras %>" data-user="<%= 0 %>" >
+                <h2><%= tantargy.nev %></h2>
+            </div>
+            <div>Be kell jelentkezned a további infók eléréséhez.</div>
+        <% } %>
+
+    <div class="leiras"></div>
+    <% }); %>
+    <script src="/kliens.js"></script>
+</div>
+</body>
+</html>

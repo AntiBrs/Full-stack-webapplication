@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <title>Feladatok</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/subjects">Create Class</a>
+        <% if (user) { %>
+          <span>Bejelentkezve, <%= user.nev %>!</span>
+          <a href="/logout">Logout</a>
+        <% } else { %>
+          <a href="/login">Login</a>
+        <% } %>
+        <a href="/register">Register</a>
+        <a href="/felhasznalok">Users</a>
+        <a href="/jegyek">Grades</a>
+      </nav>
+</header>
+    <div>
+        <h1>Feladatok</h1>
+    </div>
+    <div id="tasks">
+        <% feladatok.forEach(function(feladat) { %>
+            <div>
+              <h2><%= feladat.leiras %></h2>
+              <% if (feladat.deadline) { %>
+                <p>Határidő: <%= feladat.deadline.toISOString().split('T')[0] %></p>
+              <% } else { %>
+                <p>Határidő: Nincs megadva</p>
+              <% } %>
+              <a href="/<%= feladat.pdf %>">PDF megtekintése</a>
+              <% if (user && user.rang) { %>
+                <button class="deletetask" id="<%= feladat.id %>">Törlés</button>
+              <% } %>    
+            </div>
+          <% }); %>
+          <script src = "/kliens.js"></script>
+          
+    </div>
+    <form id="taskForm" action="/addTask" method="post" enctype="multipart/form-data">
+      <input type="hidden" id="tantargyId" name="tantargyId" value="<%= tantargyId %>"><br>
+      <label for="taskDescription">Feladat leírása:</label><br>
+      <input type="text" id="leiras" name="leiras" required><br>
+      <label for="deadline">Határidő:</label><br>
+      <input type="date" id="deadline" name="deadline" required><br>
+      <label for="pdf">Részletes leírás (PDF):</label><br>
+      <input type="file" id="pdf" name="pdf" accept="application/pdf" required><br>
+      <button type="submit">Hozzáadás</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <title>Felhasználók</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/subjects">Create Class</a>
+      <% if (user) { %>
+        <span>Bejelentkezve, <%= user.nev %>!</span>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+      <a href="/register">Register</a>
+      <a href="/felhasznalok">Users</a>
+      <a href="/jegyek">Grades</a>
+    </nav>
+  </header>
+  <div>
+    <h1>Felhasználók listája</h1>
+    
+    <div>
+      <h2>Admin/Igazgató</h2>
+      <ul>
+        <% felhasznalok.forEach(function(felhasznalo) { %>
+          <% if (felhasznalo.rang === 1) { %>
+            <li>
+              <% if (activeUserIds.includes(felhasznalo.id)) { %>
+                <span class="available">ONLINE•</span>
+              <% } %>
+              <%= felhasznalo.nev %> (<%= felhasznalo.email %>)
+              <% if (user && user.rang === 1 && user.id !== felhasznalo.id) { %>
+                <form action="/updateRang" method="post" style="display:inline;">
+                  <select name="rang">
+                    <option value="1" <%= felhasznalo.rang === 1 ? 'selected' : '' %>>Admin/Igazgató</option>
+                    <option value="2" <%= felhasznalo.rang === 2 ? 'selected' : '' %>>Tanár</option>
+                    <option value="3" <%= felhasznalo.rang === 3 ? 'selected' : '' %>>Diák/Vendég</option>
+                  </select>
+                  <input type="hidden" name="felhasznaloId" value="<%= felhasznalo.id %>">
+                  <button type="submit">Módosítás</button>
+                </form>
+              <% } %>
+            </li>
+          <% } %>
+        <% }); %>
+      </ul>
+    </div>
+    
+    <div>
+      <h2>Tanár</h2>
+      <ul>
+        <% felhasznalok.forEach(function(felhasznalo) { %>
+          <% if (felhasznalo.rang === 2) { %>
+            <li>
+              <% if (activeUserIds.includes(felhasznalo.id)) { %>
+                <span class="available">ONLINE•</span>
+              <% } %>
+              <%= felhasznalo.nev %> (<%= felhasznalo.email %>)
+              <% if (user && (user.rang === 1 || user.rang === 2)) { %>
+                <form action="/updateRang" method="post" style="display:inline;">
+                  <select name="rang">
+                    <option value="1" <%= felhasznalo.rang === 1 ? 'selected' : '' %>>Admin/Igazgató</option>
+                    <option value="2" <%= felhasznalo.rang === 2 ? 'selected' : '' %>>Tanár</option>
+                    <option value="3" <%= felhasznalo.rang === 3 ? 'selected' : '' %>>Diák/Vendég</option>
+                  </select>
+                  <input type="hidden" name="felhasznaloId" value="<%= felhasznalo.id %>">
+                  <button type="submit">Módosítás</button>
+                </form>
+              <% } %>
+            </li>
+          <% } %>
+        <% }); %>
+      </ul>
+    </div>
+    
+    <div>
+      <h2>Diák/Vendég</h2>
+      <ul>
+        <% felhasznalok.forEach(function(felhasznalo) { %>
+          <% if (felhasznalo.rang === 3) { %>
+            <li>
+              <% if (activeUserIds.includes(felhasznalo.id)) { %>
+                <span class="available">ONLINE•</span>
+              <% } %>
+              <%= felhasznalo.nev %> (<%= felhasznalo.email %>)
+              <% if (user && (user.rang === 1 || user.rang === 2)) { %>
+                <form action="/updateRang" method="post" style="display:inline;">
+                  <select name="rang">
+                    <option value="1" <%= felhasznalo.rang === 1 ? 'selected' : '' %>>Admin/Igazgató</option>
+                    <option value="2" <%= felhasznalo.rang === 2 ? 'selected' : '' %>>Tanár</option>
+                    <option value="3" <%= felhasznalo.rang === 3 ? 'selected' : '' %>>Diák/Vendég</option>
+                  </select>
+                  <input type="hidden" name="felhasznaloId" value="<%= felhasznalo.id %>">
+                  <button type="submit">Módosítás</button>
+                </form>
+              <% } %>
+            </li>
+          <% } %>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
